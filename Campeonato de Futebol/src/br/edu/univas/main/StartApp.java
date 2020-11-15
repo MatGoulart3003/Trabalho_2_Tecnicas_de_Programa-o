@@ -8,13 +8,13 @@ import br.edu.univas.vo.Partida;
 public class StartApp {
 	
 	public static Scanner scan = new Scanner(System.in);
-	public static int tamanhoArray = 50;
+	public static int rangeArray = 50;
 	
 	
 	public static void main(String[] args) {
 		
-		Partida partida [] = new Partida [tamanhoArray];
-		Equipe equipe [] = new Equipe [tamanhoArray];
+		Partida partida [] = new Partida [rangeArray];
+		Equipe equipe [] = new Equipe [rangeArray];
 		
 		do {
 			
@@ -51,52 +51,31 @@ public class StartApp {
 		if (option == 1) {
 			
 			preencheTime(time);
-			
-			for (int i = 0; i < tamanhoArray; i++) {
-				
-				if (equipe[i] == null) {
-					
-					equipe[i] = time;
-					break;
-				}
-				
-			}
+			addTeamArray(equipe,time);
 			
 		}
 		
 		// edita time
+		
 		else if (option == 2) {
 			
 			System.out.println("Qual equipe você quer editar?");
-			
-			for (int i = 0; i < tamanhoArray; i++) {
-				
-				if (equipe[i] != null) {
-					
-					System.out.println( i + " " + equipe[i].nome);
-					
-				}
-				
-			}
-			
-			System.out.println("Digite o indice do time desejado: ");
-			int indice = scan.nextInt();
-			scan.nextLine();
-			
-			for (int i = 0; i < tamanhoArray; i++) {
-				
-				if (i == indice) {
-					
-					preencheTime (time);
-					equipe[i] = time;
-					break;
-				}
-				
-			}
+			searchTeam(equipe);			
+			int indice = scanIdx();			
+			editArray(indice, equipe, time);
 			
 		}
 		
-		//
+		// opção 3
+		
+		else if (option == 3) {
+			
+			System.out.println("Qual equipe você quer excluir?");
+			searchTeam(equipe);	
+			int indice = scanIdx();				
+			deleteTeam(equipe, indice);
+				
+		}
 		
 	}
 	
@@ -125,5 +104,72 @@ public class StartApp {
 		System.out.println("9 - Sair");
 		System.out.println("==========================================");
 	}
+	
+	public static void searchTeam(Equipe equipe []) {
+		
+		for (int i = 0; i < rangeArray; i++) {
+			
+			if (equipe[i] != null) {
+				
+				System.out.println( i + " " + equipe[i].nome);
+				
+			}
+			
+		}
+		
+	}
 
+	public static void editArray (int indice, Equipe equipe [], Equipe time) {
+		
+		for (int i = 0; i < rangeArray; i++) {
+			
+			if (i == indice) {
+				
+				preencheTime (time);
+				equipe[i] = time;
+				break;
+			}
+			
+		}
+		
+	}
+
+	public static int scanIdx () {
+		
+		System.out.println("Digite o indice do time desejado: ");
+		int indice = scan.nextInt();
+		scan.nextLine();
+		
+		return indice;
+	}
+	
+	public static void addTeamArray (Equipe equipe [], Equipe time ) {
+		
+		for (int i = 0; i < rangeArray; i++) {
+			
+			if (equipe[i] == null) {
+				
+				equipe[i] = time;
+				break;
+			}
+			
+		}
+		
+	}
+	
+	public static void deleteTeam (Equipe equipe [],int indice) {
+		
+		for (int i = 0; i < rangeArray; i++) {
+			
+			if (i == indice) {
+				
+				equipe[i] = null;
+				break;
+			}
+			
+		}
+		
+	}
+	
+	
 }
