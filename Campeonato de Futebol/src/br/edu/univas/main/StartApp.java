@@ -92,14 +92,21 @@ public class StartApp {
 		
 		else if (option == 5) {
 			
-			System.out.println("Qual jogo você quer editar?\n");
-			searchGame(partida);
-			int indice = scanIdx();
-			editArrayGame(indice, partida, jogo, equipe);
-			
+			System.out.println("Como você quer editar a partida?");
+			System.out.println("\n1 - editar resultado: ");
+			System.out.println("2 - editar times e resultado: ");
+			int indice = scan.nextInt();
+			scan.nextLine();
+			logicEditGameScore(indice, partida,jogo, equipe);
+					
 		}
 		
-		
+		else if (option == 6) {
+			
+			System.out.println("Qual jogo vc quer excluir?\n");
+			
+			
+		}
 	}
 	
 	public static void preencheTime (Equipe equipe) {
@@ -159,7 +166,7 @@ public class StartApp {
 
 	public static int scanIdx () {
 		
-		System.out.println("Digite o indice do time desejado: ");
+		System.out.println("\nDigite o indice do time desejado: ");
 		int indice = scan.nextInt();
 		scan.nextLine();
 		
@@ -263,8 +270,8 @@ public class StartApp {
 			
 			if (partida[i] != null) {
 				
-				System.out.println( i + " - " + partida[i].mandante.nome + " X " + partida[i].visitante.nome);
-				
+				System.out.println( i + " - " + partida[i].mandante.nome + " " + partida[i].golMand + " X " + partida[i].golVisit + " " + partida[i].visitante.nome);
+										
 			}
 			
 		}
@@ -280,7 +287,6 @@ public class StartApp {
 				int indice = cadastraMandante(equipe,jogo);
 				int indice2 = cadastraVisitante(equipe,jogo);
 				logicScore(equipe,jogo,indice,indice2);
-				addGameArray(partida,jogo);
 				partida[i] = jogo;
 				break;
 			
@@ -288,6 +294,33 @@ public class StartApp {
 			
 		}
 
+		
+	}
+	
+	public static void logicEditGameScore (int indice, Partida partida[], Partida jogo, Equipe equipe [] ) {
+		
+		if (indice == 2) {
+			
+			System.out.println("Qual jogo você quer editar?\n");
+			searchGame(partida);
+			indice = scanIdx();
+			editArrayGame(indice, partida, jogo, equipe);
+		
+		}else if (indice == 1) {
+		
+			System.out.println("Qual jogo você quer editar?\n");
+			searchGame(partida);
+			indice = scanIdx();
+			
+			System.out.println("Digite os gols do " + partida[indice].mandante.nome);
+			partida[indice].golMand = scan.nextInt();
+			scan.nextLine();
+			
+			System.out.println("Digite os gols do " + partida[indice].visitante.nome);
+			partida[indice].golVisit = scan.nextInt();
+			scan.nextLine();
+		
+		}
 		
 	}
 	
