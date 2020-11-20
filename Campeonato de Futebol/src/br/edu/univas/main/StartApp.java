@@ -48,6 +48,7 @@ public class StartApp {
 		
 		Equipe time = new Equipe();		
 		Partida jogo = new Partida();
+		GolsPontos GP = new GolsPontos();
 		// opção de criar equipe
 		
 		if (option == 1) {
@@ -75,8 +76,8 @@ public class StartApp {
 			System.out.println("Qual equipe você quer excluir?\n");
 			searchTeam(equipe);	
 			int indice = scanIdx();				
-			deleteTeam(equipe, indice);
-				
+			deleteTeam(equipe, indice , golponto , partida,  jogo, GP);
+			
 		}
 		
 		// cria jogo
@@ -86,7 +87,7 @@ public class StartApp {
 			int indiceMand = cadastraMandante(equipe,jogo);
 			int indiceVisit = cadastraVisitante(equipe,jogo);
 			int indice = addGameArray(partida,jogo);
-			logicScore(equipe,jogo,golponto,indiceMand,indiceVisit,indice);
+			logicScore(equipe,jogo,golponto,indiceMand,indiceVisit,indice, GP);
 			
 			
 		}
@@ -100,7 +101,7 @@ public class StartApp {
 			System.out.println("2 - editar times e resultado: ");
 			int idx = scan.nextInt();
 			scan.nextLine();
-			logicEditGameScore(idx, partida,jogo,golponto,equipe);
+			logicEditGameScore(idx, partida,jogo,golponto,equipe, GP);
 					
 		}
 		
@@ -109,16 +110,16 @@ public class StartApp {
 			System.out.println("Qual jogo vc quer excluir?\n");
 			searchGame(partida);
 			int indice = scan.nextInt();
-			partida[indice].mandante.pontos = partida[indice].mandante.pontos - golponto[indice].pontosMand;
-			partida[indice].visitante.pontos = partida[indice].visitante.pontos - golponto[indice].pontosVisit;
-			partida[indice].mandante.saldoGols = partida[indice].mandante.saldoGols - golponto[indice].saldoGolsMand;
-			partida[indice].visitante.saldoGols = partida[indice].visitante.saldoGols - golponto[indice].saldoGolsVisit;
+			deleteGame(partida, indice, golponto, jogo, GP);
 			
-			partida[indice] = null;
+		}
+	
+		else if (option == 7 ) {
 			
 			
 			
 		}
+	
 	}
 	
 	public static void preencheTime (Equipe equipe) {
@@ -199,13 +200,21 @@ public class StartApp {
 		
 	}
 	
-	public static void deleteTeam (Equipe equipe [],int indice) {
+	public static void deleteTeam (Equipe equipe [],int indice, GolsPontos golponto [], Partida partida [], Partida jogo, GolsPontos GP) {
 		
 		for (int i = 0; i < rangeArray; i++) {
 			
 			if (i == indice) {
 				
-				equipe[i] = null;
+				equipe [i] = null;
+				partida[indice] = jogo;
+				
+				for(int j = 0; j < rangeArray; j++) {
+					
+					deleteGame(partida, indice, golponto, jogo, GP);
+					
+				}
+																
 				break;
 			}
 			
@@ -243,44 +252,47 @@ public class StartApp {
 		return indice;
 	}
 
-	public static void logicScore(Equipe equipe[],Partida jogo, GolsPontos golponto[] , int indiceMand, int indiceVisit, int indice) {
+	public static void logicScore(Equipe equipe[],Partida jogo, GolsPontos golponto[] , int indiceMand, int indiceVisit, int indice, GolsPontos GP) {
+		
+		
 		
 		if(jogo.golMand > jogo.golVisit) {
 			
-			golponto[indice].pontosMand = 3;
-			golponto[indice].pontosVisit = 0;
-			golponto[indice].saldoGolsMand = jogo.golMand - jogo.golVisit;
-			golponto[indice].pontosVisit = jogo.golVisit - jogo.golMand;
+			GP.pontosMand = 3;
+			GP.pontosVisit = 0;
+			GP.saldoGolsMand = jogo.golMand - jogo.golVisit;
+			GP.pontosVisit = jogo.golVisit - jogo.golMand;
 			
-			equipe[indiceMand].pontos = equipe[indiceMand].pontos + golponto[indice].pontosMand;
+			equipe[indiceMand].pontos = equipe[indiceMand].pontos + GP.pontosMand;
 			
 			
-			equipe[indiceMand].saldoGols = equipe[indiceMand].saldoGols + (golponto[indice].saldoGolsMand);
-			equipe[indiceVisit].saldoGols = equipe[indiceVisit].saldoGols +(golponto[indice].saldoGolsVisit);
+			equipe[indiceMand].saldoGols = equipe[indiceMand].saldoGols + (GP.saldoGolsMand);
+			equipe[indiceVisit].saldoGols = equipe[indiceVisit].saldoGols +(GP.saldoGolsVisit);
 			
 		
 		}else if (jogo.golVisit > jogo.golMand) {
 			
-			golponto[indice].pontosMand = 0;
-			golponto[indice].pontosVisit = 3;
-			golponto[indice].saldoGolsMand = jogo.golMand - jogo.golVisit;
-			golponto[indice].pontosVisit = jogo.golVisit - jogo.golMand;
+			GP.pontosMand = 0;
+			GP.pontosVisit = 3;
+			GP.saldoGolsMand = jogo.golMand - jogo.golVisit;
+			GP.pontosVisit = jogo.golVisit - jogo.golMand;
 			
 			
-			equipe[indiceVisit].pontos = equipe[indiceVisit].pontos + golponto[indice].pontosVisit ;
-			equipe[indiceVisit].saldoGols = equipe[indiceVisit].saldoGols + (golponto[indice].pontosVisit);
-			equipe[indiceMand].saldoGols = equipe[indiceMand].saldoGols + (golponto[indice].saldoGolsMand);
+			equipe[indiceVisit].pontos = equipe[indiceVisit].pontos + GP.pontosVisit ;
+			equipe[indiceVisit].saldoGols = equipe[indiceVisit].saldoGols + (GP.pontosVisit);
+			equipe[indiceMand].saldoGols = equipe[indiceMand].saldoGols + (GP.saldoGolsMand);
 			
 		}else {
 			
-			golponto[indice].pontosMand = 1;
-			golponto[indice].pontosVisit = 1;
+			GP.pontosMand = 1;
+			GP.pontosVisit = 1;
 			equipe[indiceMand].pontos++;
 			equipe[indiceVisit].pontos++;
 			
 			
 		}
 		
+		golponto[indice] = GP;
 	}
 	
 	public static int addGameArray (Partida partida [], Partida jogo) {
@@ -311,7 +323,7 @@ public class StartApp {
 		
 	}
 	
-	public static void editArrayGame (int idx, Partida partida[], Partida jogo, GolsPontos golponto[], Equipe equipe []) {
+	public static void editArrayGame (int idx, Partida partida[], Partida jogo, GolsPontos golponto[], Equipe equipe [], GolsPontos GP) {
 		
 		for (int i = 0; i < rangeArray; i++) {
 			
@@ -319,7 +331,12 @@ public class StartApp {
 				
 				int indiceMand = cadastraMandante(equipe,jogo);
 				int indiceVisit = cadastraVisitante(equipe,jogo);
-				logicScore(equipe,jogo, golponto, indiceMand,indiceVisit, idx);
+				partida[idx].mandante.pontos = partida[idx].mandante.pontos - golponto[idx].pontosMand;
+				partida[idx].visitante.pontos = partida[idx].visitante.pontos - golponto[idx].pontosVisit;
+				partida[idx].mandante.saldoGols = partida[idx].mandante.saldoGols - golponto[idx].saldoGolsMand;
+				partida[idx].visitante.saldoGols = partida[idx].visitante.saldoGols - golponto[idx].saldoGolsVisit;
+								
+				logicScore(equipe,jogo, golponto, indiceMand,indiceVisit, idx, GP);
 				partida[i] = jogo;
 				break;
 			
@@ -330,14 +347,14 @@ public class StartApp {
 		
 	}
 	
-	public static void logicEditGameScore (int idx, Partida partida[], Partida jogo,GolsPontos golponto [], Equipe equipe []) {
+	public static void logicEditGameScore (int idx, Partida partida[], Partida jogo,GolsPontos golponto [], Equipe equipe [], GolsPontos GP) {
 		
 		if (idx == 2) {
 			
 			System.out.println("Qual jogo você quer editar?\n");
 			searchGame(partida);
 			idx = scanIdx();
-			editArrayGame(idx, partida, jogo, golponto, equipe);
+			editArrayGame(idx, partida, jogo, golponto, equipe, GP);
 		
 		}else if (idx == 1) {
 		
@@ -345,33 +362,128 @@ public class StartApp {
 			searchGame(partida);
 			idx = scanIdx();
 			
+			
+			
+			
 			System.out.println("Digite os gols do " + partida[idx].mandante.nome);
-			partida[idx].golMand = scan.nextInt();
+			int golMand = scan.nextInt();
 			scan.nextLine();
+			if (golMand > partida[idx].golMand) {
+				int result = golMand - partida[idx].golMand;
+				golponto[idx].saldoGolsMand = golponto[idx].saldoGolsMand + result;
+				partida[idx].mandante.saldoGols = partida[idx].mandante.saldoGols + result; 
+			}else if (golMand < partida[idx].golMand) {
+				int result = partida[idx].golMand - golMand;
+				golponto[idx].saldoGolsMand = golponto[idx].saldoGolsMand - result;
+				partida[idx].mandante.saldoGols = partida[idx].mandante.saldoGols - result;
+			}
+			int golMandante = partida[idx].golMand;
+			partida[idx].golMand = golMand;
 			
 			System.out.println("Digite os gols do " + partida[idx].visitante.nome);
-			partida[idx].golVisit = scan.nextInt();
+			int golVisit = scan.nextInt();
 			scan.nextLine();
-		
+			if (golVisit > partida[idx].golVisit) {
+				int result = golVisit - partida[idx].golVisit;
+				golponto[idx].saldoGolsVisit = golponto[idx].saldoGolsVisit + result;
+				partida[idx].visitante.saldoGols = partida[idx].visitante.saldoGols + result;
+				
+			}else if (golVisit < partida[idx].golVisit) {
+				int result = partida[idx].golVisit - golVisit;
+				golponto[idx].saldoGolsVisit = golponto[idx].saldoGolsVisit - result;
+				partida[idx].visitante.saldoGols = partida[idx].visitante.saldoGols - result;
+			}
+			int golVisitante = partida[idx].golVisit;
+			partida[idx].golVisit = golVisit;
+			
+			if (golMand > golVisit) {
+				
+				if (golMandante < golVisitante) {
+					
+					golponto[idx].pontosMand = 3;
+					partida[idx].mandante.pontos = partida[idx].mandante.pontos + 3; 
+					golponto[idx].pontosVisit = 0;
+					partida[idx].visitante.pontos = partida[idx].visitante.pontos - 3;
+					
+				}else if (golMandante ==  golVisitante) {
+					
+					golponto[idx].pontosMand = 3;
+					partida[idx].mandante.pontos = partida[idx].mandante.pontos + 2; 
+					golponto[idx].pontosVisit = 0;
+					partida[idx].visitante.pontos = partida[idx].visitante.pontos - 1;
+										
+				}
+				
+			}else if (golVisit > golMand) {
+				
+				if (golVisitante < golMandante) {
+					
+					golponto[idx].pontosMand = 0;
+					partida[idx].mandante.pontos = partida[idx].mandante.pontos -3; 
+					golponto[idx].pontosVisit = 3;
+					partida[idx].visitante.pontos = partida[idx].visitante.pontos + 3;
+					
+				}else if (golMandante ==  golVisitante) {
+					
+					golponto[idx].pontosMand = 0;
+					partida[idx].mandante.pontos = partida[idx].mandante.pontos -1; 
+					golponto[idx].pontosVisit = 3;
+					partida[idx].visitante.pontos = partida[idx].visitante.pontos + 2;
+					
+				}
+				
+			}else {
+				
+				if (golMandante > golVisitante) {
+					
+					golponto[idx].pontosMand = 1;
+					partida[idx].mandante.pontos = partida[idx].mandante.pontos - 2; 
+					golponto[idx].pontosVisit = 1;
+					partida[idx].visitante.pontos = partida[idx].visitante.pontos + 1;
+					
+				}else if (golMandante < golVisitante) {
+					
+					golponto[idx].pontosMand = 1;
+					partida[idx].mandante.pontos = partida[idx].mandante.pontos + 1; 
+					golponto[idx].pontosVisit = 1;
+					partida[idx].visitante.pontos = partida[idx].visitante.pontos - 2;
+					
+				}
+				
+				
+			}
+			
+			
+			
 		}
 		
 	}
 	
-	public static void deleteGame (int indice, Partida partida []) {
+	public static void deleteGame(Partida partida [], int indice, GolsPontos golponto [],Partida jogo, GolsPontos GP) {
 		
-		for (int i = 0; i < rangeArray; i++) {
+		
+		if (jogo.mandante == null) {
 			
-			if (i == indice) {
-				
-				partida[i] = null;
-				
-				
-				
-				break;
+		//	jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
+		//	jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
 			
-			}
+		}else if (jogo.visitante == null){
 			
+		//	jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
+		//	jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
+			
+		}else {
+			
+		//	jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
+		//	jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
+		//	jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
+		//	jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
+		
 		}
+		golponto[indice] = GP;
+		golponto[indice] = null;
+		partida[indice] = jogo;
+		partida[indice] = null;
 		
 	}
 	
