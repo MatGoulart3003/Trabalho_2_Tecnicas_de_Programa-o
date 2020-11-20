@@ -17,6 +17,7 @@ public class StartApp {
 		Partida partida [] = new Partida [rangeArray];
 		Equipe equipe [] = new Equipe [rangeArray];
 		GolsPontos golponto [] = new GolsPontos [rangeArray];
+		Equipe tabela [] = new Equipe [rangeArray];
 		
 		do {
 			
@@ -26,7 +27,7 @@ public class StartApp {
 			int option = scan.nextInt();
 			scan.nextLine();
 			
-			selectOption(option, equipe, partida, golponto);
+			selectOption(option, equipe, partida, golponto, tabela);
 			
 			if (option == 9) {
 				break;
@@ -44,11 +45,12 @@ public class StartApp {
 		
 	}
 	
-	public static void selectOption(int option, Equipe equipe [], Partida partida [], GolsPontos golponto[]) {
+	public static void selectOption(int option, Equipe equipe [], Partida partida [], GolsPontos golponto[], Equipe tabela []) {
 		
 		Equipe time = new Equipe();		
 		Partida jogo = new Partida();
 		GolsPontos GP = new GolsPontos();
+		
 		// opção de criar equipe
 		
 		if (option == 1) {
@@ -114,8 +116,18 @@ public class StartApp {
 			
 		}
 	
-		else if (option == 7 ) {
+		else if (option == 7) {
 			
+			for (int i = 0; i < rangeArray; i++) {
+				
+				Equipe classific = new Equipe ();
+				classific = equipe[i];
+				tabela[i] = classific;
+				bubbleSort(tabela);
+				
+			
+			}
+			printPlacing(tabela);
 			
 			
 		}
@@ -261,7 +273,7 @@ public class StartApp {
 			GP.pontosMand = 3;
 			GP.pontosVisit = 0;
 			GP.saldoGolsMand = jogo.golMand - jogo.golVisit;
-			GP.pontosVisit = jogo.golVisit - jogo.golMand;
+			GP.saldoGolsVisit = jogo.golVisit - jogo.golMand;
 			
 			equipe[indiceMand].pontos = equipe[indiceMand].pontos + GP.pontosMand;
 			
@@ -275,11 +287,11 @@ public class StartApp {
 			GP.pontosMand = 0;
 			GP.pontosVisit = 3;
 			GP.saldoGolsMand = jogo.golMand - jogo.golVisit;
-			GP.pontosVisit = jogo.golVisit - jogo.golMand;
+			GP.saldoGolsVisit = jogo.golVisit - jogo.golMand;
 			
 			
-			equipe[indiceVisit].pontos = equipe[indiceVisit].pontos + GP.pontosVisit ;
-			equipe[indiceVisit].saldoGols = equipe[indiceVisit].saldoGols + (GP.pontosVisit);
+			equipe[indiceVisit].pontos = equipe[indiceVisit].pontos + 3 ;
+			equipe[indiceVisit].saldoGols = equipe[indiceVisit].saldoGols + (GP.saldoGolsVisit);
 			equipe[indiceMand].saldoGols = equipe[indiceMand].saldoGols + (GP.saldoGolsMand);
 			
 		}else {
@@ -464,20 +476,20 @@ public class StartApp {
 		
 		if (jogo.mandante == null) {
 			
-		//	jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
-		//	jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
+			jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
+			jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
 			
 		}else if (jogo.visitante == null){
 			
-		//	jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
-		//	jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
+			jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
+			jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
 			
 		}else {
 			
-		//	jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
-		//	jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
-		//	jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
-		//	jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
+			jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
+			jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
+			jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
+			jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
 		
 		}
 		golponto[indice] = GP;
@@ -487,4 +499,62 @@ public class StartApp {
 		
 	}
 	
+	public static void bubbleSort (Equipe tabela []) {
+		
+		boolean swap = true;
+		
+		do {
+			swap = false;
+			for (int j = 0; j < rangeArray - 1; j++) {
+				if (tabela[j+1] != null && tabela[j].pontos < tabela[j + 1].pontos) {
+					Equipe aux = new Equipe ();
+					aux = tabela[j];
+					tabela[j] = tabela[j + 1];
+					tabela[j+1] = aux;
+					swap = true;
+				}
+			}
+			
+			for(int i = 0; i < rangeArray -1; i++) {
+				swap = false;
+				
+				if(tabela[i+1] != null && tabela[i].pontos == tabela[i+1].pontos) {
+					
+					
+					if (tabela[i].saldoGols < tabela[i+1].saldoGols) {
+						System.out.println("entrei no 2 if");
+						
+						Equipe aux = new Equipe ();
+						aux = tabela [i];
+						tabela[i] = tabela[i+1];
+						tabela[i+1] = aux;
+						swap = true;
+					}
+					
+				}
+				
+				
+			}
+		
+			
+			
+		} while(swap);
+		
+		
+	}
+
+	public static void printPlacing (Equipe tabela []) {
+		
+		System.out.println("\n\nClassificação do Campeonato:\n\n");
+		for (int i = 0; i < rangeArray; i++) {
+			
+			if (tabela[i] != null) {
+				
+				System.out.println((i+1)+ "° " + tabela[i].nome + " do estado " + tabela[i].estado + " com " + tabela[i].pontos + " pontos e " + tabela[i].saldoGols + " de saldo de gols");
+				
+			}
+			
+		}
+		
+	}
 }
