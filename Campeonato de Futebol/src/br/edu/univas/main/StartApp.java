@@ -79,7 +79,16 @@ public class StartApp {
 			searchTeam(equipe);	
 			int indice = scanIdx();				
 			deleteTeam(equipe, indice , golponto , partida,  jogo, GP);
-			
+			for (int i = 0; i < rangeArray - 1; i++) {
+				
+				if (equipe[i] == null) {
+					
+					Equipe aux = equipe[i];
+					equipe[i] = equipe[i+1];
+					equipe [i+1] = aux;
+				}
+				
+			}
 		}
 		
 		// cria jogo
@@ -118,9 +127,17 @@ public class StartApp {
 	
 		else if (option == 7) {
 			
+			Equipe classific = new Equipe ();
+			for(int i = 0; i< rangeArray;i++) {
+				
+				tabela[i] =  null;
+
+				
+			}
+			
+			
 			for (int i = 0; i < rangeArray; i++) {
 				
-				Equipe classific = new Equipe ();
 				classific = equipe[i];
 				tabela[i] = classific;
 				bubbleSort(tabela);
@@ -128,8 +145,7 @@ public class StartApp {
 			
 			}
 			printPlacing(tabela);
-			
-			
+		
 		}
 	
 	}
@@ -506,7 +522,7 @@ public class StartApp {
 		do {
 			swap = false;
 			for (int j = 0; j < rangeArray - 1; j++) {
-				if (tabela[j+1] != null && tabela[j].pontos < tabela[j + 1].pontos) {
+				if ((tabela[j+1] != null) && (tabela[j] != null) && (tabela[j].pontos < tabela[j + 1].pontos)) {
 					Equipe aux = new Equipe ();
 					aux = tabela[j];
 					tabela[j] = tabela[j + 1];
@@ -518,7 +534,7 @@ public class StartApp {
 			for(int i = 0; i < rangeArray -1; i++) {
 				swap = false;
 				
-				if(tabela[i+1] != null && tabela[i].pontos == tabela[i+1].pontos) {
+				if((tabela[i+1] != null) && (tabela[i] != null) && (tabela[i].pontos == tabela[i+1].pontos)) {
 					
 					
 					if (tabela[i].saldoGols < tabela[i+1].saldoGols) {
