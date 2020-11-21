@@ -51,7 +51,7 @@ public class StartApp {
 		Partida jogo = new Partida();
 		GolsPontos GP = new GolsPontos();
 		
-		// opção de criar equipe
+		// cria equipe
 		
 		if (option == 1) {
 			
@@ -87,7 +87,6 @@ public class StartApp {
 					equipe[i] = equipe[i+1];
 					equipe [i+1] = aux;
 				}
-				
 			}
 		}
 		
@@ -99,8 +98,7 @@ public class StartApp {
 			int indiceVisit = cadastraVisitante(equipe,jogo);
 			int indice = addGameArray(partida,jogo);
 			logicScore(equipe,jogo,golponto,indiceMand,indiceVisit,indice, GP);
-			
-			
+						
 		}
 		
 		// edita jogo
@@ -116,6 +114,8 @@ public class StartApp {
 					
 		}
 		
+		// exclui jogo
+		
 		else if (option == 6) {
 			
 			System.out.println("Qual jogo vc quer excluir?\n");
@@ -124,30 +124,24 @@ public class StartApp {
 			deleteGame(partida, indice, golponto, jogo, GP);
 			
 		}
+		
+		//mostra classificação
 	
 		else if (option == 7) {
 			
 			Equipe classific = new Equipe ();
 			for(int i = 0; i< rangeArray;i++) {
-				
 				tabela[i] =  null;
-
-				
 			}
 			
-			
 			for (int i = 0; i < rangeArray; i++) {
-				
 				classific = equipe[i];
 				tabela[i] = classific;
 				bubbleSort(tabela);
-				
-			
 			}
 			printPlacing(tabela);
-		
 		}
-	
+		
 	}
 	
 	public static void preencheTime (Equipe equipe) {
@@ -230,16 +224,20 @@ public class StartApp {
 	
 	public static void deleteTeam (Equipe equipe [],int indice, GolsPontos golponto [], Partida partida [], Partida jogo, GolsPontos GP) {
 		
+					
 		for (int i = 0; i < rangeArray; i++) {
 			
-			if (i == indice) {
+			
+			if (partida[i].mandante.nome.equals(equipe[indice].nome) || partida[i].visitante.nome.equals(equipe[indice].nome) ) {
 				
-				equipe [i] = null;
-				partida[indice] = jogo;
+				jogo = partida[i];
+				GP = golponto[i];
+				equipe [indice] = null;
+				
 				
 				for(int j = 0; j < rangeArray; j++) {
 					
-					deleteGame(partida, indice, golponto, jogo, GP);
+					deleteGame(partida, i, golponto, jogo, GP);
 					
 				}
 																
@@ -256,6 +254,7 @@ public class StartApp {
 		searchTeam(equipe);	
 		System.out.println("\nTIME MANDANTE\n ");
 		int indice = scanIdx();
+		jogo.mandante = new Equipe();
 		jogo.mandante = equipe[indice];
 		
 		System.out.println("Digite agora os gols do time mandante: ");
@@ -271,6 +270,7 @@ public class StartApp {
 		searchTeam(equipe);
 		System.out.println("\nTIME VISITANTE\n ");
 		int indice = scanIdx();
+		jogo.visitante = new Equipe();
 		jogo.visitante = equipe[indice];
 		
 		System.out.println("Digite agora os gols do time visitante: ");
@@ -408,6 +408,8 @@ public class StartApp {
 			int golMandante = partida[idx].golMand;
 			partida[idx].golMand = golMand;
 			
+			
+			
 			System.out.println("Digite os gols do " + partida[idx].visitante.nome);
 			int golVisit = scan.nextInt();
 			scan.nextLine();
@@ -423,6 +425,7 @@ public class StartApp {
 			}
 			int golVisitante = partida[idx].golVisit;
 			partida[idx].golVisit = golVisit;
+			
 			
 			if (golMand > golVisit) {
 				
@@ -489,18 +492,18 @@ public class StartApp {
 	
 	public static void deleteGame(Partida partida [], int indice, GolsPontos golponto [],Partida jogo, GolsPontos GP) {
 		
-		
-		if (jogo.mandante == null) {
+				
+		if (jogo.mandante == null && partida[indice] != null) {
 			
 			jogo.visitante.saldoGols = jogo.visitante.saldoGols - GP.saldoGolsVisit;
 			jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
 			
-		}else if (jogo.visitante == null){
+		}else if (jogo.visitante == null && partida[indice] != null){
 			
 			jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
 			jogo.mandante.saldoGols = jogo.mandante.saldoGols - GP.saldoGolsMand;
 			
-		}else {
+		}else if (partida[indice] != null) {
 			
 			jogo.mandante.pontos = jogo.mandante.pontos - GP.pontosMand;
 			jogo.visitante.pontos = jogo.visitante.pontos - GP.pontosVisit;
